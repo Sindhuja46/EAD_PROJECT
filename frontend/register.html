@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Participant Registration</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="window.location.href='home.html'">← Back to Home</button>
+    
+    <h1>Participant Registration</h1>
+    <p class="subtitle">Register for college events</p>
+    <div class="event-examples">
+      <p><strong>Popular Events:</strong> COSMOCON, CS Workshop, Coding Contest, Quiz Competition, Hackathon, Poster Design, Dance Competition, Singing Competition, Drama Competition, Sports Event, Technical Workshop, Cultural Fest</p>
+    </div>
+    
+    <form id="participantForm" class="card">
+      <div class="form-grid">
+        <div class="input-group">
+          <label class="input-label">Full Name</label>
+          <input name="name" placeholder="Enter your full name" required />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Roll Number</label>
+          <input name="roll" placeholder="Enter your roll number" required />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Department <span style="color: #6b7280; font-weight: normal;">(optional)</span></label>
+          <input name="department" placeholder="Enter your department" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Contact Number</label>
+          <input name="contact" placeholder="Enter your contact number" required />
+        </div>
+        <div class="input-group form-grid-full">
+          <label class="input-label">Event Name</label>
+          <input name="event" placeholder="Enter the event you want to register for (e.g., Coding Contest, Quiz Competition)" required />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">Register</button>
+      </div>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display: none;">
+      <h3> Registration Successful!</h3>
+      <p>You have been successfully registered for the event.</p>
+    </div>
+  </div>
+
+<script>
+const API = "http://localhost:5000/api/public";
+
+document.getElementById("participantForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById("submitBtn");
+  const successMessage = document.getElementById("successMessage");
+  
+  // Show loading state
+  submitBtn.textContent = "Registering...";
+  submitBtn.disabled = true;
+  
+  try {
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    console.log("Sending registration data:", data); // Debug log
+    
+    const res = await fetch(`${API}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    
+    console.log("Response status:", res.status); // Debug log
+    
+    if (res.ok) {
+      const responseData = await res.json();
+      console.log("Registration successful:", responseData); // Debug log
+      
+      // Show success message
+      e.target.style.display = "none";
+      successMessage.style.display = "block";
+      
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        e.target.style.display = "block";
+        successMessage.style.display = "none";
+        e.target.reset();
+        submitBtn.textContent = "Register";
+        submitBtn.disabled = false;
+      }, 3000);
+    } else {
+      const errorData = await res.json();
+      console.error("Registration failed:", errorData); // Debug log
+      
+      // Handle duplicate registration error
+      if (errorData.error && errorData.error.includes('duplicate')) {
+        alert("❌ You are already registered for this event!");
+      } else {
+        alert("❌ Registration failed: " + (errorData.error || "Please try again"));
+      }
+      
+      submitBtn.textContent = "Register";
+      submitBtn.disabled = false;
+    }
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert(" Failed to connect to server. Please try again.");
+    submitBtn.textContent = "Register";
+    submitBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

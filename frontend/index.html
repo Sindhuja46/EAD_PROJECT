@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Event Registration Tracker</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button id="logoutBtn" style="position:absolute; top:20px; right:20px;">Logout</button>
+  <button class="back-btn" onclick="window.location.href='home.html'" style="position:absolute; top:20px; left:20px;">← Home</button>
+  
+  <div class="container">
+    <h1> Admin Dashboard - Event Registration Tracker</h1>
+    <p class="subtitle">Manage all event registrations</p>
+    <form id="registerForm" class="card">
+      <div class="form-grid">
+        <div class="input-group">
+          <label class="input-label">Full Name</label>
+          <input name="name" placeholder="Enter student's full name" required />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Roll Number</label>
+          <input name="roll" placeholder="Enter roll number" required />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Department</label>
+          <input name="department" placeholder="Enter department" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Contact Number</label>
+          <input name="contact" placeholder="Enter contact number" />
+        </div>
+        <div class="input-group form-grid-full">
+          <label class="input-label">Event Name</label>
+          <input name="event" placeholder="Enter event name (e.g., Coding Contest, Quiz Competition)" required />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">Register</button>
+        <button type="button" id="cancelEdit" style="display:none">Cancel Edit</button>
+        <button type="button" id="exportBtn">Export Excel</button>
+        <button type="button" id="statsBtn">View Statistics</button>
+      </div>
+      <input type="hidden" id="editingId" />
+    </form>
+
+    <h2>Registered Participants</h2>
+    <table id="regTable">
+      <thead>
+        <tr><th>Name</th><th>Roll</th><th>Department</th><th>Event</th><th>Contact</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
